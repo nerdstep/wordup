@@ -68,11 +68,15 @@
     const destroy = document.querySelector('#destroy')
     const wu = new WordUp(ctx)
 
-    init.addEventListener('click', () => wu.init(elements => {
-      console.log(elements)
-    }))
+    init.addEventListener('click', () => {
+      wu.init((elements) => {
+        console.log(elements)
+      })
+    })
 
-    destroy.addEventListener('click', () => wu.destroy())
+    destroy.addEventListener('click', () => {
+      wu.destroy()
+    })
   }
 </script>
 
