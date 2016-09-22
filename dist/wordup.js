@@ -1,175 +1,291 @@
-/*! WordUp v0.0.4, @license MIT */
+/*! WordUp v0.1.0, @license MIT */
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
   typeof define === 'function' && define.amd ? define(factory) :
   (global.WordUp = factory());
-}(this, function () { 'use strict';
+}(this, (function () { 'use strict';
 
-  var WordUp = function WordUp(ctx, options) {
-    if ( options === void 0 ) options = {};
+var classCallCheck = function (instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+};
 
-    this.ctx = ctx
-    this.options = options
-    this.tagName = 'unwrap'
-    this.elements = this.getElements()
-    this.original = this.backup()
+var createClass = function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];
+      descriptor.enumerable = descriptor.enumerable || false;
+      descriptor.configurable = true;
+      if ("value" in descriptor) descriptor.writable = true;
+      Object.defineProperty(target, descriptor.key, descriptor);
+    }
+  }
+
+  return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);
+    if (staticProps) defineProperties(Constructor, staticProps);
+    return Constructor;
   };
+}();
 
-  var prototypeAccessors = { options: {} };
 
-  prototypeAccessors.options.set = function (opts) {
-      var this$1 = this;
 
-    this.opt = Object.assign({}, {
-      baseClass: 'wu',
-      regex: /\w/,
-      splitter: ' ',
-      joiner: ' ',
-      exclude: ['a', 'button'],
-      template: function (item) { return ("<span class=\"" + (this$1.opt.baseClass) + "\">" + item + "</span>"); },
-    }, opts)
-  };
 
-  prototypeAccessors.options.get = function () {
-    return this.opt
-  };
 
-  WordUp.prototype.backup = function backup () {
-    var items = []
 
-    this.elements.forEach(function (el) {
-      items.push(el.innerHTML)
-    })
 
-    return items
-  };
+var get$1 = function get$1(object, property, receiver) {
+  if (object === null) object = Function.prototype;
+  var desc = Object.getOwnPropertyDescriptor(object, property);
 
-  // shamelessly borrowed from https://github.com/julmot/mark.js
-  WordUp.prototype.getElements = function getElements () {
-    var ctx
+  if (desc === undefined) {
+    var parent = Object.getPrototypeOf(object);
 
-    if (typeof this.ctx === 'undefined') {
-      ctx = []
-    } else if (this.ctx instanceof HTMLElement) {
-      ctx = [this.ctx]
-    } else if (Array.isArray(this.ctx)) {
-        ctx = this.ctx
-    } else { // NodeList
-      ctx = Array.prototype.slice.call(this.ctx)
+    if (parent === null) {
+      return undefined;
+    } else {
+      return get$1(parent, property, receiver);
+    }
+  } else if ("value" in desc) {
+    return desc.value;
+  } else {
+    var getter = desc.get;
+
+    if (getter === undefined) {
+      return undefined;
     }
 
-    return ctx
-  };
+    return getter.call(receiver);
+  }
+};
 
-  WordUp.prototype.getText = function getText (el) {
-    return el.textContent || el.innerText
-  };
 
-  WordUp.prototype.filterNodes = function filterNodes (nodes) {
-      var this$1 = this;
 
-    var filtered = []
-    var tagName
-    var n
 
-    for (var i = 0; i < nodes.length; ++i) {
-      n = nodes[i]
-      tagName = n.tagName ? n.tagName.toLowerCase() : ''
 
-      if (!this$1.opt.exclude.includes(tagName)) filtered.push(n)
+
+
+
+
+
+
+
+
+
+
+
+
+var set$1 = function set$1(object, property, value, receiver) {
+  var desc = Object.getOwnPropertyDescriptor(object, property);
+
+  if (desc === undefined) {
+    var parent = Object.getPrototypeOf(object);
+
+    if (parent !== null) {
+      set$1(parent, property, value, receiver);
     }
+  } else if ("value" in desc && desc.writable) {
+    desc.value = value;
+  } else {
+    var setter = desc.set;
 
-    return filtered
-  };
+    if (setter !== undefined) {
+      setter.call(receiver, value);
+    }
+  }
 
-  WordUp.prototype.wrap = function wrap (el) {
-      var this$1 = this;
+  return value;
+};
 
-    var text = this.getText(el)
-    var newEl = document.createElement(this.tagName)
-    var items = text.split(this.opt.splitter)
+var WordUp$1 = function () {
 
-    items = items.map(function (item) {
-      if (this$1.opt.regex.test(item)) return this$1.opt.template(item)
-      return item
-    })
+  /**
+   * @param {HTMLElement|HTMLElement[]|NodeList} ctx
+   * @param {object} options
+   */
+  function WordUp(ctx) {
+    var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+    classCallCheck(this, WordUp);
 
-    items = items.join(this.opt.joiner)
-    newEl.innerHTML = items
+    this.ctx = ctx;
+    this.options = options;
+    this.tagName = 'unwrap';
+    this.elements = WordUp.contextToArray(ctx);
+    this.original = this.backup();
+  }
 
-    return newEl
-  };
+  createClass(WordUp, [{
+    key: 'backup',
+    value: function backup() {
+      var items = [];
 
-  WordUp.prototype.wrapper = function wrapper (el) {
-      var this$1 = this;
+      this.elements.forEach(function (el) {
+        items.push(el.innerHTML);
+      });
 
-    // get the element's children, filtered to exclude unwanted tags
-    var nodes = this.filterNodes(el.childNodes)
-    var n
+      return items;
+    }
+  }, {
+    key: 'filterNodes',
+    value: function filterNodes(nodes) {
+      var filtered = [];
+      var tagName = void 0;
+      var n = void 0;
 
-    for (var i = 0; i < nodes.length; ++i) {
-      n = nodes[i]
+      for (var i = 0; i < nodes.length; i += 1) {
+        n = nodes[i];
+        tagName = n.tagName ? n.tagName.toLowerCase() : '';
 
-      // if element is a non-space text node then wrap the text
-      // otherwise recursively process the child nodes
-      if (n.nodeType === n.TEXT_NODE && n.nodeValue.trim().length) {
-        var newEl = this$1.wrap(n)
+        if (!this.opt.exclude.includes(tagName)) filtered.push(n);
+      }
 
-        // insert the new element before the current one
-        n.parentNode.insertBefore(newEl, n)
+      return filtered;
+    }
+  }, {
+    key: 'wrap',
+    value: function wrap(el) {
+      var _this = this;
 
-        // finally remove the text node
-        n.parentNode.removeChild(n)
-      } else {
-        this$1.wrapper(n)
+      var text = WordUp.textContent(el);
+      var newEl = document.createElement(this.tagName);
+      var items = text.split(this.opt.splitter);
+
+      items = items.map(function (item) {
+        if (_this.opt.regex.test(item)) return _this.opt.template(item);
+        return item;
+      });
+
+      items = items.join(this.opt.joiner);
+      newEl.innerHTML = items;
+
+      return newEl;
+    }
+  }, {
+    key: 'wrapper',
+    value: function wrapper(el) {
+      // get the element's children, filtered to exclude unwanted tags
+      var nodes = this.filterNodes(el.childNodes);
+      var n = void 0;
+
+      for (var i = 0; i < nodes.length; i += 1) {
+        n = nodes[i];
+
+        // if element is a non-space text node then wrap the text
+        // otherwise recursively process the child nodes
+        if (n.nodeType === n.TEXT_NODE && n.nodeValue.trim().length) {
+          var newEl = this.wrap(n);
+
+          // insert the new element before the current one
+          n.parentNode.insertBefore(newEl, n);
+
+          // finally remove the text node
+          n.parentNode.removeChild(n);
+        } else {
+          this.wrapper(n);
+        }
       }
     }
-  };
+  }, {
+    key: 'destroy',
+    value: function destroy() {
+      var _this2 = this;
 
-  WordUp.prototype.unwrap = function unwrap (el) {
-    // get the element's parent node
-    var parent = el.parentNode
-
-    // move all children out of the element
-    while (el.firstChild) parent.insertBefore(el.firstChild, el)
-
-    // remove the empty element
-    parent.removeChild(el)
-  };
-
-  WordUp.prototype.unwrapper = function unwrapper (el) {
-      var this$1 = this;
-
-    var nodes = el.childNodes
-
-    for (var i = 0; i < nodes.length; ++i) {
-      var n = nodes[i]
-      if (n.tagName && n.tagName.toLowerCase() === this$1.tagName) this$1.unwrap(n)
-      else this$1.unwrapper(n)
+      this.elements.forEach(function (el, i) {
+        el.innerHTML = _this2.original[i];
+      });
     }
-  };
+  }, {
+    key: 'init',
+    value: function init(cb) {
+      var _this3 = this;
 
-  WordUp.prototype.destroy = function destroy () {
-      var this$1 = this;
+      this.elements.forEach(function (el) {
+        _this3.wrapper(el);
+        WordUp.unwrapper(el, _this3.tagName);
+      });
 
-    this.elements.forEach(function (el, i) {
-      el.innerHTML = this$1.original[i]
-    })
-  };
+      if (typeof cb === 'function') cb(this.elements);
+    }
+  }, {
+    key: 'options',
+    set: function set(opts) {
+      var _this4 = this;
 
-  WordUp.prototype.init = function init (cb) {
-      var this$1 = this;
+      this.opt = Object.assign({}, {
+        baseClass: 'wu',
+        regex: /\w/,
+        splitter: ' ',
+        joiner: ' ',
+        exclude: ['a', 'button'],
+        template: function template(item) {
+          return '<span class="' + _this4.opt.baseClass + '">' + item + '</span>';
+        }
+      }, opts);
+    },
+    get: function get() {
+      return this.opt;
+    }
 
-    this.elements.forEach(function (el) {
-      this$1.wrapper(el)
-      this$1.unwrapper(el)
-    })
+    // returns an array of elements from a given DOM context
 
-    if (typeof cb === 'function') cb(this.elements)
-  };
+  }], [{
+    key: 'contextToArray',
+    value: function contextToArray(context) {
+      var ctx = void 0;
 
-  Object.defineProperties( WordUp.prototype, prototypeAccessors );
+      if (!context) {
+        ctx = [];
+        // HTMLElement
+        // must use `window.` or jsdom will fail
+      } else if (context instanceof window.HTMLElement) {
+        ctx = [context];
+        // NodeList
+      } else if ({}.isPrototypeOf.call(window.NodeList, context)) {
+        ctx = Array.prototype.slice.call(context);
+      }
 
+      return ctx;
+    }
+
+    // returns the text content of an element
+
+  }, {
+    key: 'textContent',
+    value: function textContent(el) {
+      // el.innerText for IE compatibility
+      return el.textContent || el.innerText;
+    }
+  }, {
+    key: 'unwrap',
+    value: function unwrap(el) {
+      // get the element's parent node
+      var parent = el.parentNode;
+
+      // move all children out of the element
+      while (el.firstChild) {
+        parent.insertBefore(el.firstChild, el);
+      } // remove the empty element
+      parent.removeChild(el);
+    }
+  }, {
+    key: 'unwrapper',
+    value: function unwrapper(el, tagName) {
+      var nodes = el.childNodes;
+
+      for (var i = 0; i < nodes.length; i += 1) {
+        var n = nodes[i];
+        if (n.tagName && n.tagName.toLowerCase() === tagName) {
+          WordUp.unwrap(n);
+        } else {
+          WordUp.unwrapper(n, tagName);
+        }
+      }
+    }
+  }]);
   return WordUp;
+}();
 
-}));
+return WordUp$1;
+
+})));

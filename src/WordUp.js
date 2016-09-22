@@ -9,7 +9,7 @@ class WordUp {
     this.ctx = ctx
     this.options = options
     this.tagName = 'unwrap'
-    this.elements = this.getElements()
+    this.elements = WordUp.contextToArray(ctx)
     this.original = this.backup()
   }
 
@@ -20,7 +20,7 @@ class WordUp {
       splitter: ' ',
       joiner: ' ',
       exclude: ['a', 'button'],
-      template: (item) => `<span class="${this.opt.baseClass}">${item}</span>`,
+      template: item => `<span class="${this.opt.baseClass}">${item}</span>`,
     }, opts)
   }
 
@@ -28,35 +28,62 @@ class WordUp {
     return this.opt
   }
 
-  backup() {
-    const items = []
-
-    this.elements.forEach(el => {
-      items.push(el.innerHTML)
-    })
-
-    return items
-  }
-
-  // shamelessly borrowed from https://github.com/julmot/mark.js
-  getElements() {
+  // returns an array of elements from a given DOM context
+  static contextToArray(context) {
     let ctx
 
-    if (typeof this.ctx === 'undefined') {
+    if (!context) {
       ctx = []
-    } else if (this.ctx instanceof HTMLElement) {
-      ctx = [this.ctx]
-    } else if (Array.isArray(this.ctx)) {
-      ctx = this.ctx
-    } else { // NodeList
-      ctx = Array.prototype.slice.call(this.ctx)
+    // HTMLElement
+    // must use `window.` or jsdom will fail
+    } else if (context instanceof window.HTMLElement) {
+      ctx = [context]
+    // NodeList
+    } else if ({}.isPrototypeOf.call(window.NodeList, context)) {
+      ctx = Array.prototype.slice.call(context)
     }
 
     return ctx
   }
 
-  getText(el) {
+  // returns the text content of an element
+  static textContent(el) {
+    // el.innerText for IE compatibility
     return el.textContent || el.innerText
+  }
+
+  static unwrap(el) {
+    // get the element's parent node
+    const parent = el.parentNode
+
+    // move all children out of the element
+    while (el.firstChild) parent.insertBefore(el.firstChild, el)
+
+    // remove the empty element
+    parent.removeChild(el)
+  }
+
+  static unwrapper(el, tagName) {
+    const nodes = el.childNodes
+
+    for (let i = 0; i < nodes.length; i += 1) {
+      const n = nodes[i]
+      if (n.tagName && n.tagName.toLowerCase() === tagName) {
+        WordUp.unwrap(n)
+      } else {
+        WordUp.unwrapper(n, tagName)
+      }
+    }
+  }
+
+  backup() {
+    const items = []
+
+    this.elements.forEach((el) => {
+      items.push(el.innerHTML)
+    })
+
+    return items
   }
 
   filterNodes(nodes) {
@@ -64,7 +91,7 @@ class WordUp {
     let tagName
     let n
 
-    for (let i = 0; i < nodes.length; ++i) {
+    for (let i = 0; i < nodes.length; i += 1) {
       n = nodes[i]
       tagName = n.tagName ? n.tagName.toLowerCase() : ''
 
@@ -75,7 +102,7 @@ class WordUp {
   }
 
   wrap(el) {
-    const text = this.getText(el)
+    const text = WordUp.textContent(el)
     const newEl = document.createElement(this.tagName)
     let items = text.split(this.opt.splitter)
 
@@ -95,7 +122,7 @@ class WordUp {
     const nodes = this.filterNodes(el.childNodes)
     let n
 
-    for (let i = 0; i < nodes.length; ++i) {
+    for (let i = 0; i < nodes.length; i += 1) {
       n = nodes[i]
 
       // if element is a non-space text node then wrap the text
@@ -114,27 +141,6 @@ class WordUp {
     }
   }
 
-  unwrap(el) {
-    // get the element's parent node
-    const parent = el.parentNode
-
-    // move all children out of the element
-    while (el.firstChild) parent.insertBefore(el.firstChild, el)
-
-    // remove the empty element
-    parent.removeChild(el)
-  }
-
-  unwrapper(el) {
-    const nodes = el.childNodes
-
-    for (let i = 0; i < nodes.length; ++i) {
-      const n = nodes[i]
-      if (n.tagName && n.tagName.toLowerCase() === this.tagName) this.unwrap(n)
-      else this.unwrapper(n)
-    }
-  }
-
   destroy() {
     this.elements.forEach((el, i) => {
       el.innerHTML = this.original[i]
@@ -142,9 +148,9 @@ class WordUp {
   }
 
   init(cb) {
-    this.elements.forEach(el => {
+    this.elements.forEach((el) => {
       this.wrapper(el)
-      this.unwrapper(el)
+      WordUp.unwrapper(el, this.tagName)
     })
 
     if (typeof cb === 'function') cb(this.elements)
