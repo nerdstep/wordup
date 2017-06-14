@@ -1,8 +1,8 @@
-/*! WordUp v0.1.0, @license MIT */
+/*! WordUp v0.1.1, @license MIT */
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
-  typeof define === 'function' && define.amd ? define(factory) :
-  (global.WordUp = factory());
+	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+	typeof define === 'function' && define.amd ? define(factory) :
+	(global.WordUp = factory());
 }(this, (function () { 'use strict';
 
 var classCallCheck = function (instance, Constructor) {
@@ -29,83 +29,13 @@ var createClass = function () {
   };
 }();
 
-
-
-
-
-
-
-var get$1 = function get$1(object, property, receiver) {
-  if (object === null) object = Function.prototype;
-  var desc = Object.getOwnPropertyDescriptor(object, property);
-
-  if (desc === undefined) {
-    var parent = Object.getPrototypeOf(object);
-
-    if (parent === null) {
-      return undefined;
-    } else {
-      return get$1(parent, property, receiver);
-    }
-  } else if ("value" in desc) {
-    return desc.value;
-  } else {
-    var getter = desc.get;
-
-    if (getter === undefined) {
-      return undefined;
-    }
-
-    return getter.call(receiver);
-  }
-};
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-var set$1 = function set$1(object, property, value, receiver) {
-  var desc = Object.getOwnPropertyDescriptor(object, property);
-
-  if (desc === undefined) {
-    var parent = Object.getPrototypeOf(object);
-
-    if (parent !== null) {
-      set$1(parent, property, value, receiver);
-    }
-  } else if ("value" in desc && desc.writable) {
-    desc.value = value;
-  } else {
-    var setter = desc.set;
-
-    if (setter !== undefined) {
-      setter.call(receiver, value);
-    }
-  }
-
-  return value;
-};
-
 var WordUp$1 = function () {
-
   /**
    * @param {HTMLElement|HTMLElement[]|NodeList} ctx
    * @param {object} options
    */
   function WordUp(ctx) {
-    var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     classCallCheck(this, WordUp);
 
     this.ctx = ctx;
@@ -174,13 +104,13 @@ var WordUp$1 = function () {
         // if element is a non-space text node then wrap the text
         // otherwise recursively process the child nodes
         if (n.nodeType === n.TEXT_NODE && n.nodeValue.trim().length) {
-          var newEl = this.wrap(n);
+          var newEl = this.wrap(n
 
           // insert the new element before the current one
-          n.parentNode.insertBefore(newEl, n);
+          );n.parentNode.insertBefore(newEl, n
 
           // finally remove the text node
-          n.parentNode.removeChild(n);
+          );n.parentNode.removeChild(n);
         } else {
           this.wrapper(n);
         }
@@ -209,7 +139,7 @@ var WordUp$1 = function () {
     }
   }, {
     key: 'options',
-    set: function set(opts) {
+    set: function set$$1(opts) {
       var _this4 = this;
 
       this.opt = Object.assign({}, {
@@ -223,7 +153,7 @@ var WordUp$1 = function () {
         }
       }, opts);
     },
-    get: function get() {
+    get: function get$$1() {
       return this.opt;
     }
 
@@ -264,9 +194,11 @@ var WordUp$1 = function () {
 
       // move all children out of the element
       while (el.firstChild) {
-        parent.insertBefore(el.firstChild, el);
-      } // remove the empty element
-      parent.removeChild(el);
+        parent.insertBefore(el.firstChild, el
+
+        // remove the empty element
+        );
+      }parent.removeChild(el);
     }
   }, {
     key: 'unwrapper',

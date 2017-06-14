@@ -1,6 +1,5 @@
 
 class WordUp {
-
   /**
    * @param {HTMLElement|HTMLElement[]|NodeList} ctx
    * @param {object} options
