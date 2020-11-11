@@ -1,7 +1,6 @@
 {
   "name": "wordup",
   "version": "1.0.0",
-  "title": "WordUp.js",
   "description": "A zero dependency micro library for wrapping words with HTML tags.",
   "license": "MIT",
   "main": "dist/wordup.js",
@@ -14,7 +13,7 @@
     "name": "Justin M. Williams",
     "url": "https://github.com/nerdstep"
   },
-  "homepage": "",
+  "repository": "nerdstep/wordup",
   "keywords": [
     "plainJS",
     "DOM",
@@ -26,14 +25,6 @@
     "words",
     "wrap"
   ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/nerdstep/wordup"
-  },
-  "directories": {
-    "docs": "docs",
-    "src": "src"
-  },
   "scripts": {
     "start": "microbundle --watch -f umd --no-compress --name WordUp",
     "prebuild": "rimraf dist",
@@ -44,7 +35,6 @@
     "test:coverage": "jest --no-cache --coverage",
     "typecheck": "tsc --noEmit"
   },
-  "dependencies": {},
   "devDependencies": {
     "@babel/core": "^7.12.3",
     "@babel/preset-env": "^7.12.1",
