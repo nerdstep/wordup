@@ -1,6 +1,5 @@
 .vscode
-.nyc_output
 coverage
-dev
+dist
 node_modules
-npm-debug.log
+*.log
