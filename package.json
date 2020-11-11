@@ -1,12 +1,15 @@
 {
   "name": "wordup",
-  "version": "0.1.1",
+  "version": "1.0.0",
   "title": "WordUp.js",
   "description": "A zero dependency micro library for wrapping words with HTML tags.",
   "license": "MIT",
   "main": "dist/wordup.js",
-  "browser": "dist/wordup.min.js",
-  "module": "dist/wordup.esnext.js",
+  "umd:main": "dist/wordup.umd.js",
+  "module": "dist/wordup.es.js",
+  "esmodule": "dist/wordup.modern.js",
+  "source": "src/index.ts",
+  "types": "dist/wordup.d.ts",
   "author": {
     "name": "Justin M. Williams",
     "url": "https://github.com/nerdstep"
@@ -32,69 +35,60 @@
     "src": "src"
   },
   "scripts": {
-    "clean": "rimraf dist",
-    "cover": "nyc ava",
-    "test": "ava",
-    "lint": "eslint src",
-    "lint:fix": "eslint src --fix",
-    "prebuild": "npm run clean",
-    "build:es": "rollup -c config/rollup.es.js",
-    "build:umd": "rollup -c config/rollup.umd.js",
-    "build:min": "rollup -c config/rollup.umd.min.js",
-    "build": "npm-run-all --parallel build:umd build:min build:es",
-    "prepublish": "npm run build&&npm test"
+    "start": "microbundle --watch -f umd --no-compress --name WordUp",
+    "prebuild": "rimraf dist",
+    "build": "microbundle --name WordUp",
+    "lint": "xo src",
+    "lint:fix": "xo src --fix",
+    "test": "jest --watch",
+    "test:coverage": "jest --no-cache --coverage",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {},
   "devDependencies": {
-    "ava": "^0.19.1",
-    "babel-core": "^6.25.0",
-    "babel-plugin-external-helpers": "^6.22.0",
-    "babel-preset-es2015": "^6.24.1",
-    "babel-register": "^6.24.1",
-    "babelrc-rollup": "^3.0.0",
-    "eslint": "^4.0.0",
-    "eslint-config-airbnb-base": "^11.2.0",
-    "eslint-plugin-import": "^2.3.0",
-    "jsdomify": "^3.0.0",
-    "npm-run-all": "^4.0.2",
-    "nyc": "^11.0.2",
-    "rimraf": "^2.6.1",
-    "rollup": "^0.43.0",
-    "rollup-plugin-babel": "^2.7.1",
-    "rollup-plugin-filesize": "^1.3.2",
-    "rollup-plugin-uglify": "^2.0.1"
+    "@babel/core": "^7.12.3",
+    "@babel/preset-env": "^7.12.1",
+    "@babel/preset-typescript": "^7.12.1",
+    "@testing-library/dom": "^7.26.6",
+    "@types/jest": "^26.0.15",
+    "babel-jest": "^26.6.3",
+    "eslint-plugin-prettier": "^3.1.4",
+    "jest": "^26.6.3",
+    "microbundle": "^0.12.4",
+    "rimraf": "^3.0.2",
+    "ts-jest": "^26.4.3",
+    "typescript": "^4.0.5",
+    "xo": "^0.34.2"
   },
-  "eslintConfig": {
-    "extends": "airbnb-base",
-    "env": {
-      "browser": true
-    },
+  "xo": {
+    "prettier": true,
+    "globals": [
+      "describe",
+      "document",
+      "expect",
+      "it",
+      "window"
+    ],
     "rules": {
-      "semi": 0,
-      "no-param-reassign": 0
+      "unicorn/prefer-node-remove": 0
     }
   },
-  "ava": {
-    "files": [
-      "test/*.spec.js"
+  "jest": {
+    "bail": true,
+    "verbose": false,
+    "globals": {
+      "ts-jest": {
+        "babelConfig": true
+      }
+    },
+    "roots": [
+      "<rootDir>/src/"
     ],
-    "source": [
-      "src/**/*.js"
+    "testPathIgnorePatterns": [
+      "/node_modules/"
     ],
-    "require": [
-      "babel-register"
-    ]
-  },
-  "nyc": {
-    "include": [
-      "src/**/*.js"
-    ],
-    "reporter": [
-      "html",
-      "lcov",
-      "text"
-    ],
-    "check-coverage": true,
-    "report-dir": "./coverage"
+    "transform": {
+      "^.+\\.ts$": "ts-jest"
+    }
   }
 }
