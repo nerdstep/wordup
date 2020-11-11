@@ -1,8 +1,6 @@
-module.exports = `<!DOCTYPE html>
-<html>
-<body>
+export const html = `
   <div id="content">
-    <h1 id="h1">Header</h1>
+    <h1 data-testid="header">Hello World</h1>
     <p>
       Lorem ipsum dolor sit amet, te dicunt legimus usu. Ius et <a href="#">tamquam</a> suscipit. Doctus alterum pro te. Qui te probo aeque. Cum ea case latine accusamus, mel ad corpora oporteat, causae pertinax consectetuer ea sed.
     </p>
@@ -33,5 +31,4 @@ module.exports = `<!DOCTYPE html>
     </p>
     <button type="button">Button</button>
   </div>
-</body>
-</html>`
+`
